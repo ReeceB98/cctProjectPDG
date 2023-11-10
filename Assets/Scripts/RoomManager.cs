@@ -21,6 +21,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private Queue<Vector2Int> roomQueue = new Queue<Vector2Int>();
     [SerializeField] private int[,] roomGrid;
     [SerializeField] private int roomCount = 0;
+    [SerializeField] private bool generationComplete = false;
 
     private void Start()
     {
@@ -33,6 +34,26 @@ public class RoomManager : MonoBehaviour
         // The starting room will be spawned in the middle of the grid
         Vector2Int initalRoomIndex = new Vector2Int(gridSizeX / 2, gridSizeY / 2);
         StartRoomGenerationFromRoom(initalRoomIndex);
+    }
+
+    private void Update()
+    {
+        if (roomQueue.Count > 0 && roomCount < maxRooms && !generationComplete)
+        {
+            Vector2Int roomIndex = roomQueue.Dequeue();
+            int gridX = roomIndex.x;
+            int gridY = roomIndex.y;
+
+            TryGenerateRoom(new Vector2Int(gridX - 1, gridY));
+            TryGenerateRoom(new Vector2Int(gridX + 1, gridY));
+            TryGenerateRoom(new Vector2Int(gridX, gridY + 1));
+            TryGenerateRoom(new Vector2Int(gridX, gridY - 1));
+        }
+        else if (!generationComplete)
+        {
+            Debug.Log($"Generation complete, {roomCount} room created");
+            generationComplete = true;
+        }
     }
 
     private void StartRoomGenerationFromRoom(Vector2Int roomIndex)
@@ -49,6 +70,23 @@ public class RoomManager : MonoBehaviour
         initialRoom.name = $"Room - {roomCount}";
         initialRoom.GetComponent<Room>().RoomIndex = roomIndex;
         roomObjects.Add(initialRoom);
+    }
+
+    private bool TryGenerateRoom(Vector2Int roomIndex)
+    {
+        int x = roomIndex.x;
+        int y = roomIndex.y;
+
+        roomQueue.Enqueue(roomIndex);
+        roomGrid[x, y] = 1;
+        roomCount++;
+
+        GameObject newRoom = Instantiate(normalRoomPrefab, GetPositionFromGridIndex(roomIndex), Quaternion.identity);
+        newRoom.GetComponent<Room>().RoomIndex = roomIndex;
+        newRoom.name = $"Room - {roomCount}";
+        roomObjects.Add(newRoom);
+
+        return true;
     }
 
     // Calculating individual grid positions in the grid index
