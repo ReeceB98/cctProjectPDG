@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
+    [Header("Room Doors")]
     [SerializeField] GameObject topDoor;
     [SerializeField] GameObject bottomDoor;
     [SerializeField] GameObject leftDoor;
     [SerializeField] GameObject rightDoor;
-
-    [SerializeField] private Vector2Int doorNumber; 
+    [Space]
+    // Used to test if the doors open correctly
+    [Header("Door Test"), SerializeField] private Vector2Int doorVector; 
 
     public Vector2Int RoomIndex { get; set; }
-
+    
+    // Opens the door if the vector is going in that direction
     public void OpenDoor(Vector2Int direction)
     {
         if (direction == Vector2Int.up)
@@ -40,6 +43,7 @@ public class Room : MonoBehaviour
 
     private void Update()
     {
-        OpenDoor(doorNumber);
+        // Testing if the doors update when entering door number
+        OpenDoor(doorVector);
     }
 }
