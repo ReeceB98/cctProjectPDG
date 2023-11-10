@@ -585,6 +585,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f3a52deb8f06d4396f0f18315577b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topDoor: {fileID: 5253900208747694666}
+  bottomDoor: {fileID: 204268500118350982}
+  leftDoor: {fileID: 7589786575861384025}
+  rightDoor: {fileID: 3231483834001065134}
+  doorVector: {x: 0, y: 0}
 --- !u!1 &7589786575861384025
 GameObject:
   m_ObjectHideFlags: 0
