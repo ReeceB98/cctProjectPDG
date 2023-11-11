@@ -40,10 +40,12 @@ public class RoomManager : MonoBehaviour
     {
         if (roomQueue.Count > 0 && roomCount < maxRooms && !generationComplete)
         {
+            // Rooming current room from the queue
             Vector2Int roomIndex = roomQueue.Dequeue();
             int gridX = roomIndex.x;
             int gridY = roomIndex.y;
 
+            // Generating rooms from neighbour cells
             TryGenerateRoom(new Vector2Int(gridX - 1, gridY));
             TryGenerateRoom(new Vector2Int(gridX + 1, gridY));
             TryGenerateRoom(new Vector2Int(gridX, gridY + 1));
@@ -72,15 +74,28 @@ public class RoomManager : MonoBehaviour
         roomObjects.Add(initialRoom);
     }
 
+    // Generate more rooms from the starting room
     private bool TryGenerateRoom(Vector2Int roomIndex)
     {
         int x = roomIndex.x;
         int y = roomIndex.y;
 
+        if (roomCount >= maxRooms)
+        {
+            return false;
+        }
+
+        if (Random.value < 0.5f && roomIndex != Vector2Int.zero)
+        {
+            return false;
+        }
+
+        // Adding rooms to the queue
         roomQueue.Enqueue(roomIndex);
         roomGrid[x, y] = 1;
         roomCount++;
 
+        // Instantiating more rooms to the grid
         GameObject newRoom = Instantiate(normalRoomPrefab, GetPositionFromGridIndex(roomIndex), Quaternion.identity);
         newRoom.GetComponent<Room>().RoomIndex = roomIndex;
         newRoom.name = $"Room - {roomCount}";
