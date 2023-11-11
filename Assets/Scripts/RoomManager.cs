@@ -80,12 +80,20 @@ public class RoomManager : MonoBehaviour
         int x = roomIndex.x;
         int y = roomIndex.y;
 
+        // Room count higher than maximum rooms set stop generating
         if (roomCount >= maxRooms)
         {
             return false;
         }
 
+        // Random seed to allow for room generation check
         if (Random.value < 0.5f && roomIndex != Vector2Int.zero)
+        {
+            return false;
+        }
+
+        // Check to see if room does not overlap existing room
+        if(CountAdjacentRooms(roomIndex) > 1)
         {
             return false;
         }
@@ -102,6 +110,36 @@ public class RoomManager : MonoBehaviour
         roomObjects.Add(newRoom);
 
         return true;
+    }
+
+    private int CountAdjacentRooms(Vector2Int roomIndex)
+    {
+        int x = roomIndex.x;
+        int y = roomIndex.y;
+        int count = 0;
+
+        // Checks condition(s) of room to see if it allowed to be adjacent to the current room
+        if (x > 0 && roomGrid[x - 1, y] != 0)
+        {
+            count++;
+        }
+
+        if (x < gridSizeX - 1 && roomGrid[x + 1, y] != 0)
+        {
+            count++;
+        }
+
+        if (y > 0 && roomGrid[x, y - 1] != 0)
+        {
+            count++;
+        }
+
+        if (y < gridSizeY - 1 && roomGrid[x, y + 1] != 0)
+        {
+            count++;
+        }
+
+        return count;
     }
 
     // Calculating individual grid positions in the grid index
