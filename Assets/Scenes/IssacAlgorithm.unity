@@ -660,7 +660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalRoomPrefab: {fileID: 5357340861761205788, guid: aa8b925ba94348c4fb3839c4601adc48, type: 3}
-  minRooms: 0
+  minRooms: 4
   maxRooms: 8
   roomWidth: 20
   roomHeight: 12

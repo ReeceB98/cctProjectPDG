@@ -41,9 +41,9 @@ public class Room : MonoBehaviour
         }
     }
 
-    private void Update()
+    /*private void Update()
     {
         // Testing if the doors update when entering door number
         OpenDoor(doorVector);
-    }
+    }*/
 }
