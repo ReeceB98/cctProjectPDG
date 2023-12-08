@@ -664,11 +664,12 @@ MonoBehaviour:
   maxRooms: 8
   roomWidth: 20
   roomHeight: 12
-  gridSizeX: 10
-  gridSizeY: 10
+  gridSizeX: 50
+  gridSizeY: 50
   roomObjects: []
   roomCount: 0
   generationComplete: 0
+  timeScale: 25
 --- !u!4 &2046366949
 Transform:
   m_ObjectHideFlags: 0
