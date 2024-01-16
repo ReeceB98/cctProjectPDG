@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,8 +33,8 @@ public class RoomManager : MonoBehaviour
         roomQueue = new Queue<Vector2Int>();
 
         // The starting room will be spawned in the middle of the grid
-        Vector2Int initalRoomIndex = new Vector2Int(gridSizeX / 2, gridSizeY / 2);
-        StartRoomGenerationFromRoom(initalRoomIndex);
+        Vector2Int initialRoomIndex = new Vector2Int(gridSizeX / 2, gridSizeY / 2);
+        StartRoomGenerationFromRoom(initialRoomIndex);
     }
 
     private void Update()
@@ -46,10 +47,11 @@ public class RoomManager : MonoBehaviour
             int gridY = roomIndex.y;
 
             // Generating rooms from neighbour cells
-            TryGenerateRoom(new Vector2Int(gridX - 1, gridY));
+            /*TryGenerateRoom(new Vector2Int(gridX - 1, gridY));
             TryGenerateRoom(new Vector2Int(gridX + 1, gridY));
             TryGenerateRoom(new Vector2Int(gridX, gridY + 1));
-            TryGenerateRoom(new Vector2Int(gridX, gridY - 1));
+            TryGenerateRoom(new Vector2Int(gridX, gridY - 1));*/
+            StartCoroutine(Delay(gridX, gridY));
         }
         else if (roomCount < minRooms)
         {
@@ -61,6 +63,18 @@ public class RoomManager : MonoBehaviour
             Debug.Log($"Generation complete, {roomCount} room created");
             generationComplete = true;
         }
+    }
+
+    private IEnumerator Delay(int gridX, int gridY)
+    {
+        yield return new WaitForSecondsRealtime(3);
+        TryGenerateRoom(new Vector2Int(gridX - 1, gridY));
+        yield return new WaitForSecondsRealtime(3);
+        TryGenerateRoom(new Vector2Int(gridX + 1, gridY));
+        yield return new WaitForSecondsRealtime(3);
+        TryGenerateRoom(new Vector2Int(gridX, gridY + 1));
+        yield return new WaitForSecondsRealtime(3);
+        TryGenerateRoom(new Vector2Int(gridX, gridY - 1));
     }
 
     // Starting room generation
@@ -99,7 +113,7 @@ public class RoomManager : MonoBehaviour
         }
 
         // Check to see if room does not overlap existing room
-        if(CountAdjacentRooms(roomIndex) > 1)
+        if (CountAdjacentRooms(roomIndex) > 1)
         {
             return false;
         }
@@ -114,7 +128,6 @@ public class RoomManager : MonoBehaviour
         newRoom.GetComponent<Room>().RoomIndex = roomIndex;
         newRoom.name = $"Room - {roomCount}";
         roomObjects.Add(newRoom);
-
         OpenDoors(newRoom, x, y);
 
         return true;
