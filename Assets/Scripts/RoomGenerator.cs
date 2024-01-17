@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(Room2))]
 public class RoomGenerator : MonoBehaviour
 {
-    [SerializeField] private int amountToGenerate;
+    [SerializeField] private int amountToGenerate = 32;
 
-    public Room2 normalRoomPrefab;
+    public Room2 roomPrefab1x1;
 
     public static readonly float prefabsDistance = 1;
     public readonly Vector2[] offsets = new Vector2[]
@@ -27,11 +27,12 @@ public class RoomGenerator : MonoBehaviour
     {
         rooms = new List<Room2>();
         generatorRoom = GetComponent<Room2>();
+        roomsContainer = new GameObject("Rooms").transform;
     }
 
     private void Start()
     {
-        StartCoroutine(GenerateRooms(normalRoomPrefab));
+        StartCoroutine(GenerateRooms(roomPrefab1x1));
     }
 
     private IEnumerator GenerateRooms(Room2 prefab)
@@ -45,7 +46,7 @@ public class RoomGenerator : MonoBehaviour
             Vector2 newRoomPos = last + offset;
             last = newRoomPos;
 
-            Instantiate(prefab, newRoomPos, Quaternion.identity);
+            Instantiate(prefab, newRoomPos, Quaternion.identity, roomsContainer);
             yield return new WaitForSeconds(0.2f);
         }
 

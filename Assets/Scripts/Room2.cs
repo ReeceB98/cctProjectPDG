@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
 
 public class Room2 : MonoBehaviour
 {
@@ -23,7 +25,7 @@ public class Room2 : MonoBehaviour
         public Room2 leadsTo;
     }
 
-    [SerializeField] private SpriteRenderer[] body;
+    [SerializeField] private SpriteRenderer body;
     [SerializeField] private SpriteRenderer centerDecoration;
 
     public Doors[] roomDoors = new Doors[4];
