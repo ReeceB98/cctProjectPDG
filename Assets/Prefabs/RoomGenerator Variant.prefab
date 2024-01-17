@@ -105,8 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4e2fc6f567e25c40949e631690b905c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amountToGenerate: 0
-  normalRoomPrefab: {fileID: 0}
+  amountToGenerate: 32
+  roomPrefab1x1: {fileID: 342257575277591382, guid: 31b13cd2e75c37b4fbc12349e86c7cff, type: 3}
   rooms: []
   generatingRooms: 0
   generatorRoom: {fileID: 0}
