@@ -10,6 +10,7 @@ public class DungeonTest
     [UnityTest]
     public IEnumerator T01_Generator_Active()
     {
+        RoomGenerator.useSeed = true;
         SceneManager.LoadScene(0);
         yield return null;
 
@@ -27,8 +28,10 @@ public class DungeonTest
 
         while (generator.generatingRooms)
         {
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.15f);
         }
+
+        yield return new WaitForSeconds(0.05f);
 
         bool foundBrokenRoom = false;
         List<Room2> generatedRooms = generator.rooms;
@@ -37,6 +40,8 @@ public class DungeonTest
             if (generatedRooms[i].GetActiveDoorsAmount() == 0)
             {
                 foundBrokenRoom = true;
+                Debug.Log(generatedRooms[i].name);
+                yield return new WaitForSeconds(3);
                 break;
             }
         }
@@ -112,5 +117,77 @@ public class DungeonTest
         }
 
         Assert.AreEqual(false, foundBrokenConnection);
+    }
+
+    [UnityTest]
+    public IEnumerator T05_Can_Visit_Every_Room()
+    {
+        RoomGenerator generator = Object.FindObjectOfType<RoomGenerator>();
+
+        while (generator.generatingRooms)
+        {
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        bool foundUnreachableRoom = false;
+        List<Room2> generatedRooms = generator.rooms;
+        Room2 generatorRoom = generator.generatorRoom;
+        for (int i = 0; i < generatedRooms.Count && !foundUnreachableRoom; i++)
+        {
+            List<Room2> path = generatedRooms[i].GetShortestPathTo(generatorRoom);
+            if (path == null)
+            {
+                foundUnreachableRoom = true;
+                Debug.Log($"{generatedRooms[i].name} isn't connected to generator (start point)");
+            }
+        }
+
+        Assert.AreEqual(false, foundUnreachableRoom);
+    }
+
+    [UnityTest]
+    public IEnumerator T06_Same_Seed_Dungeons_Are_Equal()
+    {
+        string dungeonToString(RoomGenerator _generator)
+        {
+            Room2[] generatedRooms = _generator.rooms.ToArray();
+            List<Room2> neighbours = new List<Room2>();
+            for (int i = 0; i < generatedRooms.Length; i++)
+            {
+                Room2.Doors[] doors = generatedRooms[i].roomDoors;
+                for (int j = 0; j < doors.Length; j++)
+                {
+                    neighbours.Add(doors[j].leadsTo);
+                }
+            }
+            return string.Join("\n", neighbours);
+        }
+
+        string generation1;
+        string generation2;
+        RoomGenerator.useSeed = true;
+        SceneManager.LoadScene(0);
+        yield return null;
+
+        RoomGenerator generator = Object.FindAnyObjectByType<RoomGenerator>();
+
+        while (generator.generatingRooms)
+        {
+            yield return new WaitForSeconds(0.05f);
+        }
+        generation1 = dungeonToString(generator);
+
+        SceneManager.LoadScene(0);
+        yield return null;
+
+        generator = Object.FindAnyObjectByType<RoomGenerator>();
+
+        while (generator.generatingRooms)
+        {
+            yield return new WaitForSeconds(0.05f);
+        }
+        generation2 = dungeonToString(generator);
+
+        Assert.AreEqual(generation1, generation2);
     }
 }
