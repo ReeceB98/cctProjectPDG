@@ -11,9 +11,12 @@ public class DungeonTest
     public IEnumerator T01_Generator_Active()
     {
         RoomGenerator.useSeed = true;
+
+        // Load scene and wait one frame
         SceneManager.LoadScene(0);
         yield return null;
 
+        // Get the room generator
         RoomGenerator generator = Object.FindObjectOfType<RoomGenerator>();
 
         bool generatorActive = generator.isActiveAndEnabled && generator.generatingRooms;
@@ -24,8 +27,10 @@ public class DungeonTest
     [UnityTest]
     public IEnumerator T02_Every_Room_Has_A_Door()
     {
+        // Get the room generator
         RoomGenerator generator = Object.FindObjectOfType<RoomGenerator>();
 
+        // Waiting for room generation
         while (generator.generatingRooms)
         {
             yield return new WaitForSeconds(0.15f);
@@ -34,9 +39,11 @@ public class DungeonTest
         yield return new WaitForSeconds(0.05f);
 
         bool foundBrokenRoom = false;
+        // Get the list of generated rooms
         List<Room2> generatedRooms = generator.rooms;
         for (int i = 0; i < generatedRooms.Count; i++)
         {
+            // A condition to find any broken rooms that need fixing
             if (generatedRooms[i].GetActiveDoorsAmount() == 0)
             {
                 foundBrokenRoom = true;
@@ -80,8 +87,10 @@ public class DungeonTest
     [UnityTest]
     public IEnumerator T04_Two_Way_Connections()
     {
+        // Get room generator
         RoomGenerator generator = Object.FindObjectOfType<RoomGenerator>();
 
+        // Waiting for room generation
         while (generator.generatingRooms)
         {
             yield return new WaitForSeconds(0.05f);
@@ -91,8 +100,11 @@ public class DungeonTest
         List<Room2> generatedRooms = generator.rooms;
         for (int i = 0; i < generatedRooms.Count && !foundBrokenConnection; i++)
         {
+            // Get the current room and its doors
             Room2 currentRoom = generatedRooms[i];
             Room2.Doors[] doors = generatedRooms[i].roomDoors;
+
+            // Check through all doors and neighbouring rooms are connected together
             for (int j = 0; j < doors.Length; j++)
             {
                 if (doors[j].active)
@@ -120,6 +132,8 @@ public class DungeonTest
     }
 
     [UnityTest]
+    // Checking each room individually to see if they can be visited
+    // If not the test will fail.
     public IEnumerator T05_Can_Visit_Every_Room()
     {
         RoomGenerator generator = Object.FindObjectOfType<RoomGenerator>();
@@ -146,14 +160,21 @@ public class DungeonTest
     }
 
     [UnityTest]
+    // A test to see if a seed in room generator can generate the same layout multiple times
     public IEnumerator T06_Same_Seed_Dungeons_Are_Equal()
     {
         string dungeonToString(RoomGenerator _generator)
         {
+            // Getting the array of rooms generated
+            // Create the list of neighbours
             Room2[] generatedRooms = _generator.rooms.ToArray();
             List<Room2> neighbours = new List<Room2>();
+
+
             for (int i = 0; i < generatedRooms.Length; i++)
             {
+                // Get the room doors
+                // And add to list to every neighbour room and the doors
                 Room2.Doors[] doors = generatedRooms[i].roomDoors;
                 for (int j = 0; j < doors.Length; j++)
                 {
@@ -166,6 +187,8 @@ public class DungeonTest
         string generation1;
         string generation2;
         RoomGenerator.useSeed = true;
+
+        // Generation test 1
         SceneManager.LoadScene(0);
         yield return null;
 
@@ -176,7 +199,9 @@ public class DungeonTest
             yield return new WaitForSeconds(0.05f);
         }
         generation1 = dungeonToString(generator);
+        //
 
+        // Generation test 2
         SceneManager.LoadScene(0);
         yield return null;
 
@@ -187,6 +212,7 @@ public class DungeonTest
             yield return new WaitForSeconds(0.05f);
         }
         generation2 = dungeonToString(generator);
+        //
 
         Assert.AreEqual(generation1, generation2);
     }

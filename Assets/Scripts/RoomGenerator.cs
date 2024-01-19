@@ -5,11 +5,14 @@ using UnityEngine;
 public class RoomGenerator : MonoBehaviour
 {
     public static bool useSeed = false;
-    public static readonly int seed = 4555;
+    public static readonly int seed = 1000;
+
+
     [SerializeField] private int amountToGenerate = 8;
 
     public Room2 roomPrefab1x1;
 
+    // Determines the distance for each room generated in any direction
     public static readonly float prefabsDistance = 1;
     public readonly Vector2[] offsets = new Vector2[]
     {
@@ -21,6 +24,9 @@ public class RoomGenerator : MonoBehaviour
 
     public List<Room2> rooms;
 
+    // Stores the rooms generated in one area
+    // Shows if a room is being generated or not
+    // Will be the starting room for the player
     private Transform roomsContainer;
     public bool generatingRooms;
     public Room2 generatorRoom;
@@ -60,19 +66,23 @@ public class RoomGenerator : MonoBehaviour
 
         for (int i = 0; i < amountToGenerate; i++)
         {
+            // Pick a random direction for a room to generate to
+            // The distance between each room with the offset
+            // The new room position
             dir = (Room2.Directions)Random.Range(0, 4);
             offset = offsets[(int)dir];
             Vector2 newRoomPos = last + offset;
-            //last = newRoomPos;
 
             Room2 newRoom = Instantiate(prefab, newRoomPos, Quaternion.identity, roomsContainer);
             newRoom.gameObject.name = "Room " + rooms.Count;
-            //rooms.Add(newRoom);
-            //yield return new WaitForFixedUpdate();
-            yield return new WaitForSeconds(0.2f);
-            //yield return null;
+
+            //yield return new WaitForFixedUpdate(); // Best performance
+            yield return new WaitForSeconds(0.3f);  // Artifical Timer effect
+            //yield return null;                    // Wait one frame
 
             last = newRoomPos;
+
+            // To check if a new room collides with an existing which will then be destroyed
             if (newRoom.collision)
             {
                 newRoom.gameObject.SetActive(false);
@@ -80,6 +90,7 @@ public class RoomGenerator : MonoBehaviour
                 i--;
                 continue;
             }
+            // Add the new room to the list
             rooms.Add(newRoom);
             //Debug.Log($"Generated: {dir}");
         }
@@ -100,17 +111,20 @@ public class RoomGenerator : MonoBehaviour
 
     private Room2 FindFurthestRoom()
     {
+        // Store the checked rooms in a list
         List<Room2> checkedRooms = new List<Room2>();
 
         int index = -1;
         float biggestDist = 0;
         for (int i = rooms.Count - 1; i >= 0; i--)
         {
+            // Check if the check room contains a new room
             if (checkedRooms.Contains(rooms[i]))
             {
                 continue;
             }
 
+            // Condition to check how many rooms have been visted before to reach the target/boss
             List<Room2> path = rooms[i].GetShortestPathTo(generatorRoom);
             if (path == null)
             {
@@ -118,6 +132,7 @@ public class RoomGenerator : MonoBehaviour
                 break;
             }
 
+            // Store the biggest distance away from starting room
             int dist = path.Count;
             if (dist > biggestDist)
             {
@@ -125,6 +140,7 @@ public class RoomGenerator : MonoBehaviour
                 biggestDist = dist;
             }
 
+            // Mark the visited room as checked rooms
             for (int j = 0; j < path.Count; j++)
             {
                 if (!checkedRooms.Contains(path[j]))
@@ -134,6 +150,7 @@ public class RoomGenerator : MonoBehaviour
             }
 
         }
+        // Display the furthest room
         if (index != -1)
         {
             return rooms[index];
@@ -145,11 +162,13 @@ public class RoomGenerator : MonoBehaviour
         
     }
 
+    // Iterating through steps to make a path to the boss room
     private void SetPathToRoom(Room2 r)
     {
         if (r)
         {
             List<Room2> steps = r.GetShortestPathTo(generatorRoom);
+            //Debug.Log($"Steps: {steps.Count}\n{string.Join<Room2>("\n", steps.ToArray())}");
             for (int i = 1; i < steps.Count; i++)
             {
                 steps[i].MarkAsPathToBossRoom();

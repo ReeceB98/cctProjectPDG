@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Room2 : MonoBehaviour
 {
+    // The directions the door can be placed from its neighbour
     public enum Directions
     {
         up,
@@ -15,6 +16,8 @@ public class Room2 : MonoBehaviour
     }
 
     [System.Serializable]
+    // The characteristics/variables for the door
+    // This can all be found in the inspector
     public struct Doors
     {
         [HideInInspector]
@@ -25,18 +28,23 @@ public class Room2 : MonoBehaviour
         public Room2 leadsTo;
     }
 
+    // Sprites for the pieces of the room
     [SerializeField] private SpriteRenderer body;
     [SerializeField] private SpriteRenderer centerDecoration;
 
+    // Door Array
     public Doors[] roomDoors = new Doors[4];
 
     [HideInInspector] public bool collision;
 
-    private void Start()
+    private IEnumerator Start()
     {
         if (!GetComponent<RoomGenerator>())
         {
-            body.color = new Color(Random.Range(0.2f, 0.8f), Random.Range(0.2f, 0.8f), Random.Range(0.2f, 0.8f));
+            body.color = new Color(0.0f, 125.0f, 125.0f, 255.0f);
+            yield return new WaitForSeconds(0.3f);
+            body.color = new Color(0.0f, 0.0f, 255.0f, 255.0f);
+            yield return new WaitForSeconds(0.3f);
         }
     }
     private void OnTriggerEnter2D(Collider2D col)
@@ -90,6 +98,7 @@ public class Room2 : MonoBehaviour
             return null;
         }
 
+        // Check if the current target is the neighour
         for (int i = 0; i < roomDoors.Length; i++)
         {
             if (roomDoors[i].leadsTo == target)
@@ -101,11 +110,13 @@ public class Room2 : MonoBehaviour
             }
         }   
         
+        // Tell neighbours to look for the target
         for (int j = 0; j < roomDoors.Length; j++)
         {
             Doors d = roomDoors[j];
             if (d.active && !steps.Contains(d.leadsTo))
             {
+                // Check the shortest from neighbour is shorter than current shortest path
                 List<Room2> result = d.leadsTo.GetShortestPathTo(target, new List<Room2>(steps), shortest);
                 if (result != null)
                 {
@@ -121,6 +132,7 @@ public class Room2 : MonoBehaviour
 
     }
 
+    // Find the amount of doors active and return the output of the amount
     public int GetActiveDoorsAmount()
     {
         int output = 0;
@@ -131,7 +143,6 @@ public class Room2 : MonoBehaviour
                 output++;
             }
         }
-
         return output;
     }
 }
