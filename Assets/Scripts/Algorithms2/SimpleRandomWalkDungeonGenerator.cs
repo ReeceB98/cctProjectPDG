@@ -4,22 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 {
-
     [SerializeField] protected SimpleRandomWalkData randomWalkParameters;
+    [SerializeField] private Toggle toggle2;
+    [SerializeField] private Button generatingButton;
 
     protected override void RunProceduralGeneration()
     {
-        HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
-        /*foreach (var position in floorPositions)
-        {
-            Debug.Log(position);
-        }*/
-        tilemapVisualizer.Clear();
-        tilemapVisualizer.PaintFloorTiles(floorPositions);
-        WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+        //generatingButton.onClick.
+        //if (toggle2.isOn == true)
+        //{
+            HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
+            tilemapVisualizer.Clear();
+            tilemapVisualizer.PaintFloorTiles(floorPositions);
+            WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+        //}
     }
 
     protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkData parameters, Vector2Int position)
