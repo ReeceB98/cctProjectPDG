@@ -8,17 +8,38 @@ public class TilemapVisualizer : MonoBehaviour
 {
     [SerializeField] private Tilemap floorTilemap, wallTilemap;
     [SerializeField] private TileBase floorTile, wallTop;
+    SimpleRandomWalkDungeonGenerator simpleRandom;
+    SettingsManager settingsManager;
+
+    /*private void Awake()
+    {
+        simpleRandom = GameObject.FindAnyObjectByType<SimpleRandomWalkDungeonGenerator>();
+    }*/
+    private void Start()
+    {
+        simpleRandom = GameObject.FindAnyObjectByType<SimpleRandomWalkDungeonGenerator>();
+        settingsManager = GameObject.FindAnyObjectByType<SettingsManager>();
+        //StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
+    }
+    private void Update()
+    {
+        if (settingsManager.startRW)
+        {
+            StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
+        }
+    }
 
     public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions)
     {
         PaintTiles(floorPositions, floorTilemap, floorTile);
     }
 
-    private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
+    private IEnumerator PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         foreach (var position in positions)
         {
             PaintSingleTile(tilemap, tile, position);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

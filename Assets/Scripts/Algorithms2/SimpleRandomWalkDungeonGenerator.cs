@@ -9,19 +9,18 @@ using UnityEngine.UI;
 public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 {
     [SerializeField] protected SimpleRandomWalkData randomWalkParameters;
-    [SerializeField] private Toggle toggle2;
-    [SerializeField] private Button generatingButton;
+    public HashSet<Vector2Int> floorPositions;
 
+    private void Awake()
+    {
+        floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
+    }
     protected override void RunProceduralGeneration()
     {
-        //generatingButton.onClick.
-        //if (toggle2.isOn == true)
-        //{
-            HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
-            tilemapVisualizer.Clear();
-            tilemapVisualizer.PaintFloorTiles(floorPositions);
-            WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
-        //}
+        ///*HashSet<Vector2Int> */floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
+        tilemapVisualizer.Clear();
+        tilemapVisualizer.PaintFloorTiles(floorPositions);
+        WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
     }
 
     protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkData parameters, Vector2Int position)

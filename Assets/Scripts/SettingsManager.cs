@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -15,11 +16,24 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private GameObject generatingButton3;
     [SerializeField] private GameObject generatingButton4;
 
-    private void Start()
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Slider cameraSlider;
+
+
+    public bool startRW = false;
+
+    private void Update()
     {
-        generatingButton4.SetActive(true);
-        generatingButton4.GetComponent<Button>().interactable = false;
-        toggle4.isOn = true;
+        TurnOnSimpleRandomWalkDungeon();
+        TurnOnRandomWalkWithCorridors();
+        TurnOnBinarySpaceParitioningDungeon();
+        AdjustCameraSize();
+    }
+
+    public void AdjustCameraSize()
+    {
+        Debug.Log(cameraSlider.value);
+        mainCamera.orthographicSize = cameraSlider.value;
     }
 
     public void TurnOnSimpleRandomWalkDungeon()
@@ -31,12 +45,16 @@ public class SettingsManager : MonoBehaviour
             generatingButton2.SetActive(false);
             generatingButton3.SetActive(false);
 
-            //generatingButton1.GetComponent<Button>().interactable = true;
+            generatingButton1.GetComponent<Button>().interactable = true;
+            if (EventSystem.current.currentSelectedGameObject.name == "SimpleRandomWalkDungeonButton")
+            {
+                startRW = true;
+            }
         }
-        else
+        else if (toggle1.isOn == false)
         {
-            Debug.Log("Interactable is off");
-            //generatingButton1.GetComponent<Button>().interactable = false;
+            Debug.Log("Generate Button 1 is off");
+            generatingButton1.GetComponent<Button>().interactable = false;
         }
     }
     public void TurnOnRandomWalkWithCorridors()
@@ -47,11 +65,14 @@ public class SettingsManager : MonoBehaviour
             generatingButton1.SetActive(false);
             generatingButton2.SetActive(true);
             generatingButton3.SetActive(false);
+
+            generatingButton2.GetComponent<Button>().interactable = true;
         }
-        /*else
+        else if (toggle2.isOn == false)
         {
-            generatingButton2.SetActive(false);
-        }*/
+            Debug.Log("Generate Button 2 is off");
+            generatingButton2.GetComponent<Button>().interactable = false;
+        }
     }
 
     public void TurnOnBinarySpaceParitioningDungeon()
@@ -62,10 +83,13 @@ public class SettingsManager : MonoBehaviour
             generatingButton1.SetActive(false);
             generatingButton2.SetActive(false);
             generatingButton3.SetActive(true);
+
+            generatingButton3.GetComponent<Button>().interactable = true;
         }
-        /*else
+        else if (toggle3.isOn == false)
         {
-            generatingButton3.SetActive(false);
-        }*/
+            Debug.Log("Generate Button 3 is off");
+            generatingButton3.GetComponent<Button>().interactable = false;
+        }
     }
 }
