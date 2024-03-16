@@ -14317,6 +14317,8 @@ MonoBehaviour:
   wallTilemap: {fileID: 2040188968}
   floorTile: {fileID: 11400000, guid: 471853985ed4b5242ad12af71ace0cf6, type: 2}
   wallTop: {fileID: 11400000, guid: e8b43cc52e972fd48bc98271404a3c73, type: 2}
+  exitEnumerator: 0
+  iteration: 0
 --- !u!4 &659368421
 Transform:
   m_ObjectHideFlags: 0
@@ -15549,7 +15551,6 @@ MonoBehaviour:
   mainCamera: {fileID: 1716818101}
   cameraSlider: {fileID: 383450002}
   startRW: 0
-  clickButtonName: SimpleRandomWalkDungeonButton
 --- !u!1 &1268529584
 GameObject:
   m_ObjectHideFlags: 0
@@ -16735,13 +16736,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 662184182}
+      - m_Target: {fileID: 662184183}
         m_TargetAssemblyTypeName: AbstractDungeonGenerator, scripts
-        m_MethodName: 
+        m_MethodName: GenerateDungeon
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

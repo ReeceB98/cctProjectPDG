@@ -8,11 +8,14 @@ using UnityEngine.UI;
 
 public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 {
+    SettingsManager settingsManager;
     [SerializeField] protected SimpleRandomWalkData randomWalkParameters;
     public HashSet<Vector2Int> floorPositions;
+    public bool endLoop = false;
 
     private void Awake()
     {
+        settingsManager = GameObject.FindAnyObjectByType<SettingsManager>();
         floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
     }
     protected override void RunProceduralGeneration()
@@ -20,7 +23,11 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
         ///*HashSet<Vector2Int> */floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
         tilemapVisualizer.Clear();
         tilemapVisualizer.PaintFloorTiles(floorPositions);
-        WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+
+        if (endLoop)
+        {
+            WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+        }
     }
 
     protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkData parameters, Vector2Int position)

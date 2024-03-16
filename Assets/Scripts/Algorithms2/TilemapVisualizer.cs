@@ -11,6 +11,7 @@ public class TilemapVisualizer : MonoBehaviour
     SimpleRandomWalkDungeonGenerator simpleRandom;
     SettingsManager settingsManager;
 
+
     /*private void Awake()
     {
         simpleRandom = GameObject.FindAnyObjectByType<SimpleRandomWalkDungeonGenerator>();
@@ -27,20 +28,27 @@ public class TilemapVisualizer : MonoBehaviour
         {
             StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
         }
+        else
+        {
+            Debug.Log("Coroutine Finished");
+            simpleRandom.endLoop = true;
+        }
     }
 
-    public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions)
+    public void PaintFloorTiles(HashSet<Vector2Int> floorPositions)
     {
         PaintTiles(floorPositions, floorTilemap, floorTile);
     }
 
-    private IEnumerator PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
+    private IEnumerator PaintTiles(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         foreach (var position in positions)
         {
             PaintSingleTile(tilemap, tile, position);
             yield return new WaitForSeconds(0.1f);
         }
+
+        settingsManager.startRW = false;
     }
 
     internal void PaintSingleBasicWall(Vector2Int position)

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class SettingsManager : MonoBehaviour
 {
+    TilemapVisualizer tilemapVisualizer;
+
     [SerializeField] private Toggle toggle1;
     [SerializeField] private Toggle toggle2;
     [SerializeField] private Toggle toggle3;
@@ -22,12 +25,22 @@ public class SettingsManager : MonoBehaviour
 
     public bool startRW = false;
 
+    private void Awake()
+    {
+        tilemapVisualizer = GameObject.FindAnyObjectByType<TilemapVisualizer>();
+    }
+
     private void Update()
     {
         TurnOnSimpleRandomWalkDungeon();
         TurnOnRandomWalkWithCorridors();
         TurnOnBinarySpaceParitioningDungeon();
         AdjustCameraSize();
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(1);
+        }
     }
 
     public void AdjustCameraSize()
@@ -55,6 +68,7 @@ public class SettingsManager : MonoBehaviour
         {
             Debug.Log("Generate Button 1 is off");
             generatingButton1.GetComponent<Button>().interactable = false;
+            //tilemapVisualizer.Clear();
         }
     }
     public void TurnOnRandomWalkWithCorridors()
