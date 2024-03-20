@@ -24,6 +24,7 @@ public class SettingsManager : MonoBehaviour
 
 
     public bool startRW = false;
+    public bool startRWC = false;
 
     private void Awake()
     {
@@ -81,6 +82,10 @@ public class SettingsManager : MonoBehaviour
             generatingButton3.SetActive(false);
 
             generatingButton2.GetComponent<Button>().interactable = true;
+            if (EventSystem.current.currentSelectedGameObject.name == "CorridorFirstDungeonButton")
+            {
+                startRWC = true;
+            }
         }
         else if (toggle2.isOn == false)
         {

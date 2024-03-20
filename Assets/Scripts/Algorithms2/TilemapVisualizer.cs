@@ -9,7 +9,9 @@ public class TilemapVisualizer : MonoBehaviour
     [SerializeField] private Tilemap floorTilemap, wallTilemap;
     [SerializeField] private TileBase floorTile, wallTop;
     SimpleRandomWalkDungeonGenerator simpleRandom;
+    CorridorFirstDungeonGenerator corridorFirstDungeonGenerator;
     SettingsManager settingsManager;
+
 
 
     /*private void Awake()
@@ -19,6 +21,7 @@ public class TilemapVisualizer : MonoBehaviour
     private void Start()
     {
         simpleRandom = GameObject.FindAnyObjectByType<SimpleRandomWalkDungeonGenerator>();
+        corridorFirstDungeonGenerator = GameObject.FindAnyObjectByType<CorridorFirstDungeonGenerator>();
         settingsManager = GameObject.FindAnyObjectByType<SettingsManager>();
         //StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
     }
@@ -28,27 +31,59 @@ public class TilemapVisualizer : MonoBehaviour
         {
             StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
         }
+        if (settingsManager.startRWC)
+        {
+            StartCoroutine(PaintTiles2(corridorFirstDungeonGenerator.floorPositions, floorTilemap, floorTile));
+        }
         else
         {
             Debug.Log("Coroutine Finished");
-            simpleRandom.endLoop = true;
+            //simpleRandom.endLoop = true;
         }
     }
 
     public void PaintFloorTiles(HashSet<Vector2Int> floorPositions)
     {
-        PaintTiles(floorPositions, floorTilemap, floorTile);
+        if (settingsManager.startRW)
+        {
+            PaintTiles(floorPositions, floorTilemap, floorTile);
+        }
+
+        if (settingsManager.startRWC)
+        {
+            PaintTiles2(floorPositions, floorTilemap, floorTile);
+        }
     }
 
     private IEnumerator PaintTiles(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
-        foreach (var position in positions)
+        
+        //if (settingsManager.startRW)
+        //{
+            foreach (var position in positions)
+            {
+                PaintSingleTile(tilemap, tile, position);
+                yield return new WaitForSeconds(0.1f);
+            }
+        //}
+
+        settingsManager.startRW = false;
+        simpleRandom.endLoop = true;
+    }
+
+    public IEnumerator PaintTiles2(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
+    {
+        if (settingsManager.startRWC)
         {
-            PaintSingleTile(tilemap, tile, position);
-            yield return new WaitForSeconds(0.1f);
+            foreach (var position in positions)
+            {
+                PaintSingleTile(tilemap, tile, position);
+                yield return new WaitForSeconds(0.1f);
+            }
         }
 
         settingsManager.startRW = false;
+        simpleRandom.endLoop = true;
     }
 
     internal void PaintSingleBasicWall(Vector2Int position)

@@ -8,15 +8,28 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
     [SerializeField] private int corridorLength = 14, corridorCount = 5;
     [SerializeField] [Range(0.1f, 1)] private float roomPercent = 0.8f;
+    public HashSet<Vector2Int> floorPositons;
+
+    private void Awake()
+    {
+        settingsManager = GameObject.FindAnyObjectByType<SettingsManager>();
+        settingsManager.startRWC = false;
+        floorPositons = new HashSet<Vector2Int>();
+    }
 
     protected override void RunProceduralGeneration()
     {
         CorridorFirstGeneration();
     }
 
+    private void Update()
+    {
+
+    }
+
     private void CorridorFirstGeneration()
     {
-        HashSet<Vector2Int> floorPositons = new HashSet<Vector2Int>();
+        //HashSet<Vector2Int> floorPositons = new HashSet<Vector2Int>();
         HashSet<Vector2Int> potentialRoomPositions = new HashSet<Vector2Int>();
 
         List<List<Vector2Int>> corridors = CreateCorridors(floorPositons, potentialRoomPositions);
@@ -36,8 +49,14 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             floorPositons.UnionWith(corridors[i]);
         }
 
-        tilemapVisualizer.PaintFloorTiles(floorPositons);
-        WallGenerator.CreateWalls(floorPositons, tilemapVisualizer);
+        if (settingsManager.startRWC == true)
+        {
+            tilemapVisualizer.PaintFloorTiles(floorPositons);
+        }
+        if (endLoop)
+        {
+            WallGenerator.CreateWalls(floorPositons, tilemapVisualizer);
+        }
     }
 
     public List<Vector2Int> IncreaseCorridorBrush3by3(List<Vector2Int> corridor)
