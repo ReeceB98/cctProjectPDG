@@ -42,6 +42,7 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 
     protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkData parameters, Vector2Int position)
     {
+        position = new Vector2Int(0, 0);
         var currentPosition = position;
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>();
         for (int i = 0; i < parameters.iterations; i++)

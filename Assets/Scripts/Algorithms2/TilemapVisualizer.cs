@@ -53,22 +53,28 @@ public class TilemapVisualizer : MonoBehaviour
         {
             PaintTiles2(floorPositions, floorTilemap, floorTile);
         }
+
+        if (settingsManager.startBSP)
+        {
+            PaintTiles3(floorPositions, floorTilemap, floorTile);
+        }
     }
 
     private IEnumerator PaintTiles(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         
-        //if (settingsManager.startRW)
-        //{
+        if (settingsManager.startRW)
+        {
             foreach (var position in positions)
             {
                 PaintSingleTile(tilemap, tile, position);
                 yield return new WaitForSeconds(0.1f);
             }
-        //}
 
-        settingsManager.startRW = false;
-        simpleRandom.endLoop = true;
+            settingsManager.startRW = false;
+            simpleRandom.endLoop = true;
+        }
+
     }
 
     public IEnumerator PaintTiles2(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
@@ -84,6 +90,21 @@ public class TilemapVisualizer : MonoBehaviour
 
         settingsManager.startRW = false;
         simpleRandom.endLoop = true;
+    }
+
+    public void PaintTiles3(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
+    {
+        if (settingsManager.startBSP)
+        {
+            foreach (var position in positions)
+            {
+                PaintSingleTile(tilemap, tile, position);
+                //yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        //settingsManager.startRW = false;
+        //simpleRandom.endLoop = true;
     }
 
     internal void PaintSingleBasicWall(Vector2Int position)

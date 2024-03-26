@@ -23,14 +23,14 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
-        if (randomWalkRooms)
-        {
+        //if (randomWalkRooms)
+        //{
             floor = CreateRoomsRandomly(roomsList);
-        }
-        else 
-        {
+        //}
+        //else 
+        //{
             floor = CreateSimpleRooms(roomsList);
-        }
+        //}
         
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();

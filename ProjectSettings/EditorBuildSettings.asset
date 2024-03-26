@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/IsaacAlgorithm2.unity
     guid: 64c47414480a73e49adce4ffa8d35ae1
+  - enabled: 1
+    path: Assets/Scenes/RW_Algorithm.unity
+    guid: a699debef8fdbe140a14a9ef77d7c7ac
   m_configObjects: {}

@@ -12,12 +12,12 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private Toggle toggle1;
     [SerializeField] private Toggle toggle2;
     [SerializeField] private Toggle toggle3;
-    [SerializeField] private Toggle toggle4;
     
     [SerializeField] private GameObject generatingButton1;
     [SerializeField] private GameObject generatingButton2;
     [SerializeField] private GameObject generatingButton3;
-    [SerializeField] private GameObject generatingButton4;
+
+    [SerializeField] private GameObject BFSgenerator;
 
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Slider cameraSlider;
@@ -25,10 +25,12 @@ public class SettingsManager : MonoBehaviour
 
     public bool startRW = false;
     public bool startRWC = false;
+    public bool startBSP = false;
 
     private void Awake()
     {
         tilemapVisualizer = GameObject.FindAnyObjectByType<TilemapVisualizer>();
+        cameraSlider.value = 14.0f;
     }
 
     private void Update()
@@ -37,17 +39,17 @@ public class SettingsManager : MonoBehaviour
         TurnOnRandomWalkWithCorridors();
         TurnOnBinarySpaceParitioningDungeon();
         AdjustCameraSize();
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(1);
-        }
     }
 
     public void AdjustCameraSize()
     {
         Debug.Log(cameraSlider.value);
         mainCamera.orthographicSize = cameraSlider.value;
+    }
+
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void TurnOnSimpleRandomWalkDungeon()
@@ -82,9 +84,10 @@ public class SettingsManager : MonoBehaviour
             generatingButton3.SetActive(false);
 
             generatingButton2.GetComponent<Button>().interactable = true;
-            if (EventSystem.current.currentSelectedGameObject.name == "CorridorFirstDungeonButton")
+            if (EventSystem.current.currentSelectedGameObject.name == "BFSDungeonButton")
             {
-                startRWC = true;
+                BFSgenerator.SetActive(true);
+                generatingButton2.GetComponent<Button>().interactable = false;
             }
         }
         else if (toggle2.isOn == false)
@@ -104,6 +107,10 @@ public class SettingsManager : MonoBehaviour
             generatingButton3.SetActive(true);
 
             generatingButton3.GetComponent<Button>().interactable = true;
+            if (EventSystem.current.currentSelectedGameObject.name == "RoomsFirstDungeonButton")
+            {
+                startBSP = true;
+            }
         }
         else if (toggle3.isOn == false)
         {
