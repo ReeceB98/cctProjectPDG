@@ -37,10 +37,10 @@ public class TilemapVisualizer : MonoBehaviour
             StartCoroutine(PaintTiles(simpleRandom.floorPositions, floorTilemap, floorTile));
             //PaintTiles2(simpleRandom.floorPositions, floorTilemap, floorTile);
         }
-        else if (settingsManager.startBSP)
+        /*else if (settingsManager.startBSP)
         {
-            PaintTiles3(simpleRandom.floorPositions, floorTilemap, floorTile);
-        }
+            StartCoroutine(PaintTiles3(simpleRandom.floorPositions, floorTilemap, floorTile));
+        }*/
         else
         {
             //Debug.Log("Coroutine Finished");
@@ -68,7 +68,7 @@ public class TilemapVisualizer : MonoBehaviour
         settingsManager.timeReamining += Time.deltaTime;
         generatorTimer.text = settingsManager.timeReamining.ToString();
 
-        if (settingsManager.startRW)
+        if (settingsManager.startRW && settingsManager.isTimerStarting)
         {
             foreach (var position in positions)
             {
@@ -76,14 +76,15 @@ public class TilemapVisualizer : MonoBehaviour
                 yield return new WaitForSeconds(0.05f);
             }
 
-            /*settingsManager.isTimerStarting = false;
+            simpleRandom.endLoop = true;
+            settingsManager.isTimerStarting = false;
+ 
             if (!settingsManager.isTimerStarting)
             {
                 Time.timeScale = 0.0f;
-            }*/
+            }
 
             settingsManager.startRW = false;
-            simpleRandom.endLoop = true;
         }
 
         /*settingsManager.startRW = false;
@@ -120,20 +121,28 @@ public class TilemapVisualizer : MonoBehaviour
             Time.timeScale = 0.0f;
         }*/
 
-        /*settingsManager.startRW = false;
-        simpleRandom.endLoop = true;*//*
-    }*/
+    /*settingsManager.startRW = false;
+    simpleRandom.endLoop = true;*//*
+}*/
 
     public void PaintTiles3(HashSet<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         settingsManager.timeReamining += Time.deltaTime;
         generatorTimer.text = settingsManager.timeReamining.ToString();
+
         if (settingsManager.startBSP)
         {
             foreach (var position in positions)
             {
-                PaintSingleTile(tilemap, tile, position);
+                PaintSingleTile2(tilemap, tile, position);
             }
+        }
+
+        settingsManager.isTimerStarting = false;
+
+        if (!settingsManager.isTimerStarting)
+        {
+            Time.timeScale = 0.0f;
         }
 
         //settingsManager.startBSP = false;
@@ -148,6 +157,13 @@ public class TilemapVisualizer : MonoBehaviour
     private void PaintSingleTile(Tilemap tilemap, TileBase tile, Vector2Int position)
     {
         var tilePosition = tilemap.WorldToCell((Vector3Int)position);
+        tilemap.SetTile(tilePosition, tile);
+    }
+
+    private void PaintSingleTile2(Tilemap tilemap, TileBase tile, Vector2Int position)
+    {
+        var tilePosition = tilemap.WorldToCell((Vector3Int)position);
+        //var tilePosition = tilemap.WorldToCell(new Vector3(1000, 1000, 0));
         tilemap.SetTile(tilePosition, tile);
     }
 

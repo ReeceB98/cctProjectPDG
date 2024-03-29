@@ -57,7 +57,7 @@ public class SettingsManager : MonoBehaviour
 
     private void ResettingScene()
     {
-        //tilemapVisualizer.Clear();
+        tilemapVisualizer.Clear();
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
     }

@@ -25,7 +25,7 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
         floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (endLoop)
         {

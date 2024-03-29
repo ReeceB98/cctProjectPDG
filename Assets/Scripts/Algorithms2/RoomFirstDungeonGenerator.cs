@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
@@ -9,7 +10,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] private int minRoomWidth = 4, minRoomHeight = 4;
     [SerializeField] private int dungeonWidth = 20, dungeonHeight = 20;
     [SerializeField] [Range(0, 10)] private int offset = 1;
-    [SerializeField] private bool randomWalkRooms = false;
+    [SerializeField] private Text generatorTimer;
 
     protected override void RunProceduralGeneration()
     {
@@ -23,14 +24,9 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
-        //if (randomWalkRooms)
-        //{
-            floor = CreateRoomsRandomly(roomsList);
-        //}
-        //else 
-        //{
+            //floor = CreateRoomsRandomly(roomsList);
+
             floor = CreateSimpleRooms(roomsList);
-        //}
         
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();

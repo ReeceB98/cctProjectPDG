@@ -1782,7 +1782,7 @@ MonoBehaviour:
   tilemapVisualizer: {fileID: 659368420}
   startPosition: {x: -40, y: -40}
   settingsManager: {fileID: 0}
-  randomWalkParameters: {fileID: 11400000, guid: b8115e2b6fdce604c8e7b4adba5ac3e1, type: 2}
+  randomWalkParameters: {fileID: 11400000, guid: c682ef0daa8bcbd4b8ae76b5eb4efe67, type: 2}
   endLoop: 0
   minRoomWidth: 10
   minRoomHeight: 10
