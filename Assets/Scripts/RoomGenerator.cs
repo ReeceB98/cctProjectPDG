@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 [RequireComponent(typeof(Room2))]
 public class RoomGenerator : MonoBehaviour
 {
@@ -30,6 +32,9 @@ public class RoomGenerator : MonoBehaviour
     private Transform roomsContainer;
     public bool generatingRooms;
     public Room2 generatorRoom;
+
+    [SerializeField] private Text generatortext;
+    [SerializeField] private float elapsedTime;
 
     private void Awake()
     {
@@ -77,8 +82,11 @@ public class RoomGenerator : MonoBehaviour
             newRoom.gameObject.name = "Room " + rooms.Count;
 
             //yield return new WaitForFixedUpdate(); // Best performance
-            yield return new WaitForSeconds(0.3f);  // Artifical Timer effect
+            yield return new WaitForSeconds(0.05f);  // Artifical Timer effect
             //yield return null;                    // Wait one frame
+
+            elapsedTime += Time.deltaTime;
+            generatortext.text = elapsedTime.ToString();
 
             last = newRoomPos;
 

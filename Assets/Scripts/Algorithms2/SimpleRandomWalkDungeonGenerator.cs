@@ -16,8 +16,13 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
     private void Awake()
     {
         settingsManager = GameObject.FindAnyObjectByType<SettingsManager>();
-        floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
+        //floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
         endLoop = false;
+    }
+
+    private void Start()
+    {
+        floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
     }
 
     private void Update()
